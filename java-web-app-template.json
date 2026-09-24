@@ -1,0 +1,99 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+
+    "location": {
+      "type": "string",
+      "defaultValue": "Central India"
+    },
+
+    "appServicePlanName": {
+      "type": "string",
+      "defaultValue": "spring-linux-plan"
+    },
+
+    "webAppName": {
+      "type": "string",
+      "defaultValue": "springboot-linux-demo"
+    },
+
+    "skuName": {
+      "type": "string",
+      "defaultValue": "B1"
+    },
+
+    "javaVersion": {
+      "type": "string",
+      "defaultValue": "Java|17"
+    }
+
+  },
+
+  "resources": [
+
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2025-03-01",
+      "name": "[parameters('appServicePlanName')]",
+      "location": "[parameters('location')]",
+
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "Basic",
+        "size": "[parameters('skuName')]",
+        "family": "B",
+        "capacity": 1
+      },
+
+      "kind": "linux",
+
+      "properties": {
+        "reserved": true
+      }
+    },
+
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2025-03-01",
+      "name": "[parameters('webAppName')]",
+      "location": "[parameters('location')]",
+
+      "kind": "app",
+
+      "properties": {
+
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+
+        "siteConfig": {
+
+          "linuxFxVersion": "[parameters('javaVersion')]",
+
+          "alwaysOn": true,
+
+          "appSettings": [
+            {
+              "name": "WEBSITES_PORT",
+              "value": "8080"
+            }
+          ]
+        }
+      },
+
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+      ]
+    }
+
+  ],
+
+  "outputs": {
+
+    "webAppUrl": {
+      "type": "string",
+      "value": "[concat('https://', parameters('webAppName'), '.azurewebsites.net')]"
+    }
+
+  }
+}   
