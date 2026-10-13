@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: MyLaptopPool
+  name: MyLaptopPool
 
 steps:
 - task: JavaToolInstaller@0
