@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: MyLaptopPool
 
 steps:
 - task: JavaToolInstaller@0
